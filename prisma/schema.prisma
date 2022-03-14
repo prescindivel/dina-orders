@@ -15,11 +15,9 @@ model Client {
   id String @id @default(uuid())
 
   name  String
-  phone String
+  phone String @unique
 
-  sellingPlace SellingPlace @relation(fields: [sellingPlaceId], references: [id])
-
-  sellingPlaceId String
+  sellingPlaces SellingPlace[]
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
