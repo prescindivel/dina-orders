@@ -64,7 +64,8 @@ model ProductType {
 model ProductOption {
   id String @id @default(uuid())
 
-  name String @unique
+  name String
+  slug String @unique
 
   products    Product[]
   productType ProductType @relation(fields: [productTypeId], references: [id])
