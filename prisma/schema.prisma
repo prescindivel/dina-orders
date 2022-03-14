@@ -51,7 +51,8 @@ model Product {
 model ProductType {
   id String @id @default(uuid())
 
-  name String @unique
+  name String
+  slug String @unique
 
   products       Product[]
   productOptions ProductOption[]

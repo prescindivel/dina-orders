@@ -3,21 +3,26 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const main = async () => {
-  // const vitu = await prisma.client.upsert({
-  //   where: { phone: '85997542187' },
-  //   update: {},
-  //   create: {
-  //     name: 'Vitu',
-  //     phone: '85997542187',
-  //     sellingPlaces: {
-  //       create: {
-  //         name: 'Bayhusha'
-  //       }
-  //     }
-  //   }
-  // })
+  const sellingPlace = await prisma.sellingPlace.upsert({
+    update: {},
+    where: { name: 'Bayusha' },
+    create: {
+      name: 'Bayusha',
+      location: 'Rua Barão de Aracati, 1100',
+      clients: {
+        createMany: {
+          data: [
+            {
+              name: 'Vitu',
+              phone: '00999999999'
+            }
+          ]
+        }
+      }
+    }
+  })
 
-  console.log('seed')
+  // const productTypes = await prisma.productType.createMany({})
 }
 
 main()
