@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Client {
+  id String @id @default(uuid())
+
+  name           String
+  phone          String
+  sellingPlaceId String
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  name   String
+  price  Float
+  image  String
+  active Boolean
+
+  type   ProductType   @relation(fields: [productTypeId], references: [id])
+  option ProductOption @relation(fields: [productOptionId], references: [id])
+  size   ProductSize   @relation(fields: [productSizeId], references: [id])
+  order  Order?        @relation(fields: [orderId], references: [id])
+
+  productTypeId   String
+  productOptionId String
+  productSizeId   String
+  orderId         String?
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model ProductType {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  products       Product[]
+  productOptions ProductOption[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model ProductOption {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  products    Product[]
+  productType ProductType @relation(fields: [productTypeId], references: [id])
+
+  productTypeId String
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model ProductSize {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  totalPrice   Float
+  oderDate     DateTime @default(now())
+  deliveryDate DateTime
+
+  products     Product[]
+  sellingPlace SellingPlace @relation(fields: [sellingPlaceId], references: [id])
+
+  sellingPlaceId String
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model SellingPlace {
+  id String @id @default(uuid())
+
+  name     String @unique
+  location String
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
