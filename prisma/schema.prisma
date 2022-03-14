@@ -10,3 +10,104 @@ datasource db {
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
+
+model Category {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name  String @unique
+  image String
+
+  subcategories Subcategory[]
+  products      Product[]
+}
+
+model Subcategory {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name  String @unique
+  image String
+
+  products Product[]
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  categoryId String?
+}
+
+model ProductSize {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name String @unique
+
+  products Product[]
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name        String  @unique
+  price       Float
+  image       String
+  description String
+  active      Boolean @default(true)
+
+  category    Category     @relation(fields: [categoryId], references: [id])
+  subcategory Subcategory  @relation(fields: [subcategoryId], references: [id])
+  productSize ProductSize? @relation(fields: [productSizeId], references: [id])
+  order       Order?       @relation(fields: [orderId], references: [id])
+
+  categoryId    String
+  subcategoryId String
+  productSizeId String?
+  orderId       String?
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name  String
+  phone String @unique
+
+  orders        Order[]
+  sellingPlaces SellingPlace[]
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  orderDate    DateTime @default(now())
+  deliveryDate DateTime
+  totalPrice   Float
+
+  products     Product[]
+  customer     Customer      @relation(fields: [customerId], references: [id])
+  sellingPlace SellingPlace? @relation(fields: [sellingPlaceId], references: [id])
+
+
+  customerId     String
+  sellingPlaceId String?
+}
+
+model SellingPlace {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  name  String @unique
+  phone String
+  image String
+
+  orders    Order[]
+  customers Customer[]
+}
