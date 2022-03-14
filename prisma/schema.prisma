@@ -17,6 +17,7 @@ model Client {
   name  String
   phone String @unique
 
+  orders        Order[]
   sellingPlaces SellingPlace[]
 
   createdAt DateTime @default(now())
@@ -90,12 +91,14 @@ model Order {
   deliveryDate DateTime
 
   products     Product[]
+  client       Client       @relation(fields: [clientId], references: [id])
   sellingPlace SellingPlace @relation(fields: [sellingPlaceId], references: [id])
 
   sellingPlaceId String
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+  clientId  String
 }
 
 model SellingPlace {
