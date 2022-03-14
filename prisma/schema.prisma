@@ -14,8 +14,11 @@ datasource db {
 model Client {
   id String @id @default(uuid())
 
-  name           String
-  phone          String
+  name  String
+  phone String
+
+  sellingPlace SellingPlace @relation(fields: [sellingPlaceId], references: [id])
+
   sellingPlaceId String
 
   createdAt DateTime @default(now())
@@ -32,12 +35,12 @@ model Product {
 
   type   ProductType   @relation(fields: [productTypeId], references: [id])
   option ProductOption @relation(fields: [productOptionId], references: [id])
-  size   ProductSize   @relation(fields: [productSizeId], references: [id])
+  size   ProductSize?  @relation(fields: [productSizeId], references: [id])
   order  Order?        @relation(fields: [orderId], references: [id])
 
   productTypeId   String
   productOptionId String
-  productSizeId   String
+  productSizeId   String?
   orderId         String?
 
   createdAt DateTime @default(now())
@@ -103,7 +106,8 @@ model SellingPlace {
   name     String @unique
   location String
 
-  orders Order[]
+  orders  Order[]
+  clients Client[]
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
