@@ -104,9 +104,9 @@ model SellingPlace {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  name  String @unique
+  name  String  @unique
   phone String
-  image String
+  image String?
 
   orders    Order[]
   customers Customer[]
